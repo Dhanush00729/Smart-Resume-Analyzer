@@ -1,0 +1,751 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Smart Resume Analyzer</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f1f5f9;
+            color: #1e293b;
+        }
+
+        header {
+            background: #172554;
+            color: white;
+            padding: 22px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        header p {
+            color: #cbd5e1;
+        }
+
+        nav {
+            background: #1e40af;
+            padding: 13px;
+            text-align: center;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            color: #facc15;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 30px auto;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+        }
+
+        h2 {
+            color: #1e40af;
+            margin-bottom: 20px;
+        }
+
+        h3 {
+            margin-bottom: 12px;
+        }
+
+        label {
+            display: block;
+            margin: 13px 0 7px;
+            font-weight: bold;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 7px;
+            font-size: 15px;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 90px;
+        }
+
+        button {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            margin-top: 15px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        .secondary {
+            background: #475569;
+        }
+
+        .secondary:hover {
+            background: #334155;
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background: #eff6ff;
+            border-left: 5px solid #2563eb;
+            border-radius: 6px;
+            display: none;
+        }
+
+        .error {
+            background: #fee2e2;
+            border-left-color: #dc2626;
+            color: #991b1b;
+        }
+
+        .success {
+            background: #dcfce7;
+            border-left-color: #16a34a;
+            color: #166534;
+        }
+
+        .progress-container {
+            background: #e2e8f0;
+            height: 20px;
+            border-radius: 20px;
+            margin-top: 12px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            background: #16a34a;
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .chat-box {
+            height: 280px;
+            overflow-y: auto;
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .message {
+            padding: 10px;
+            margin-bottom: 12px;
+            border-radius: 8px;
+            white-space: pre-wrap;
+            line-height: 1.5;
+        }
+
+        .user-message {
+            background: #dbeafe;
+            text-align: right;
+        }
+
+        .bot-message {
+            background: #e2e8f0;
+        }
+
+        .chat-input {
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input input {
+            flex: 1;
+        }
+
+        .chat-input button {
+            margin-top: 0;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background: #172554;
+            color: white;
+            margin-top: 40px;
+        }
+
+        .small-text {
+            font-size: 13px;
+            color: #64748b;
+            margin-top: 8px;
+        }
+
+        ul {
+            margin-left: 22px;
+            line-height: 1.8;
+        }
+
+        @media(max-width: 650px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            nav a {
+                display: inline-block;
+                margin: 7px;
+            }
+
+            .chat-input {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>Smart Resume Analyzer</h1>
+    <p>Analyze Your Resume | Identify Skill Gaps | Build Your Career</p>
+</header>
+
+<nav>
+    <a href="#profile">Profile</a>
+    <a href="#upload">Upload Resume</a>
+    <a href="#analysis">Skills Analysis</a>
+    <a href="#assistant">Career Assistant</a>
+</nav>
+
+
+<div class="container">
+
+    <!-- STUDENT PROFILE -->
+
+    <section class="card" id="profile">
+
+        <h2>Student Profile</h2>
+
+        <div class="grid">
+
+            <div>
+                <label>Student Name</label>
+                <input type="text" id="studentName"
+                       placeholder="Enter your name">
+            </div>
+
+            <div>
+                <label>Email Address</label>
+                <input type="email" id="email"
+                       placeholder="Enter your email">
+            </div>
+
+            <div>
+                <label>CGPA</label>
+                <input type="text" id="cgpa"
+                       placeholder="Enter your CGPA">
+            </div>
+
+            <div>
+                <label>Target Job Role</label>
+
+                <select id="jobRole">
+                    <option value="Software Developer">
+                        Software Developer
+                    </option>
+
+                    <option value="Web Developer">
+                        Web Developer
+                    </option>
+
+                    <option value="Data Analyst">
+                        Data Analyst
+                    </option>
+
+                    <option value="Embedded Systems Engineer">
+                        Embedded Systems Engineer
+                    </option>
+
+                    <option value="Electronics Engineer">
+                        Electronics Engineer
+                    </option>
+                </select>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- PDF RESUME UPLOAD -->
+
+    <section class="card" id="upload">
+
+        <h2>Upload Your Resume</h2>
+
+        <p>Select your resume in PDF format.</p>
+
+        <label>Choose PDF Resume</label>
+
+        <input type="file" id="resumeFile"
+               accept=".pdf,application/pdf">
+
+        <button onclick="uploadResume()">
+            Upload and Analyze Resume
+        </button>
+
+        <div id="uploadResult" class="result"></div>
+
+        <p class="small-text">
+            Your name, email, CGPA and technical skills
+            will be extracted from the uploaded PDF.
+        </p>
+
+    </section>
+
+
+    <!-- SKILLS ANALYSIS -->
+
+    <section class="card" id="analysis">
+
+        <h2>Skills Gap Analysis</h2>
+
+        <label>Your Current Skills</label>
+
+        <textarea id="yourSkills"
+            placeholder="Example: C++, Python, HTML, CSS, SQL"></textarea>
+
+        <label>Required Job Skills</label>
+
+        <textarea id="jobSkills"
+            placeholder="Example: C++, Python, SQL, JavaScript, Git"></textarea>
+
+        <button onclick="analyzeSkills()">
+            Analyze My Skills
+        </button>
+
+        <div id="analysisResult" class="result">
+
+            <h3>Analysis Results</h3>
+
+            <p>
+                <strong>Skill Match Percentage:</strong>
+                <span id="percentage">0%</span>
+            </p>
+
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+
+            <br>
+
+            <p><strong>Matched Skills:</strong></p>
+            <p id="matchedSkills">None</p>
+
+            <br>
+
+            <p><strong>Missing Skills:</strong></p>
+            <p id="missingSkills">None</p>
+
+            <br>
+
+            <p>
+                <strong>Matched Count:</strong>
+                <span id="matchedCount">0</span>
+            </p>
+
+            <p>
+                <strong>Total Required Skills:</strong>
+                <span id="totalCount">0</span>
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- CAREER ASSISTANT -->
+
+    <section class="card" id="assistant">
+
+        <h2>AI Career Assistant</h2>
+
+        <p>
+            Ask questions about skills, career paths,
+            interviews, resumes and learning plans.
+        </p>
+
+        <br>
+
+        <div class="chat-box" id="chatBox">
+
+            <div class="message bot-message">
+                Hello! Welcome to your Career Assistant.
+
+                Ask me anything about your career!
+            </div>
+
+        </div>
+
+        <div class="chat-input">
+
+            <input type="text" id="chatInput"
+                   placeholder="Ask your career question..."
+                   onkeydown="if(event.key === 'Enter') sendMessage()">
+
+            <button onclick="sendMessage()">
+                Send
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- ROADMAP -->
+
+    <section class="card">
+
+        <h2>Career Preparation Tips</h2>
+
+        <h3>Suggested Learning Roadmap</h3>
+
+        <ul>
+            <li>Week 1: Learn programming fundamentals.</li>
+            <li>Week 2: Improve technical skills.</li>
+            <li>Week 3: Build practical projects.</li>
+            <li>Week 4: Prepare your resume and interviews.</li>
+            <li>Practise coding and problem solving regularly.</li>
+        </ul>
+
+    </section>
+
+</div>
+
+
+<footer class="footer">
+    <p>Smart Resume Analyzer | C++ Backend Project</p>
+    <p>Designed for Students and Job Seekers</p>
+</footer>
+
+
+<script>
+
+// =====================================
+// PDF RESUME UPLOAD
+// =====================================
+
+async function uploadResume() {
+
+    const fileInput = document.getElementById("resumeFile");
+
+    const resultBox = document.getElementById("uploadResult");
+
+    const file = fileInput.files[0];
+
+    if (!file) {
+        showResult(resultBox, "Please select a PDF resume.", true);
+        return;
+    }
+
+    if (file.type !== "application/pdf" &&
+        !file.name.toLowerCase().endsWith(".pdf")) {
+        showResult(resultBox, "Please upload a valid PDF file.", true);
+        return;
+    }
+
+    const formData = new FormData();
+
+    formData.append("resume", file);
+
+    showResult(resultBox, "Uploading and analyzing your resume...", false);
+
+    try {
+
+        const response = await fetch("/upload-resume", {
+            method: "POST",
+            body: formData
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || "Resume upload failed.");
+        }
+
+        // Automatically fill student profile
+
+        document.getElementById("studentName").value =
+            data.name || "";
+
+        document.getElementById("email").value =
+            data.email || "";
+
+        document.getElementById("cgpa").value =
+            data.cgpa || "";
+
+        document.getElementById("yourSkills").value =
+            data.skills || "";
+
+        showResult(
+            resultBox,
+            "Resume uploaded successfully!\n\n" +
+            "Name: " + (data.name || "Not found") + "\n" +
+            "Email: " + (data.email || "Not found") + "\n" +
+            "CGPA: " + (data.cgpa || "Not found") + "\n" +
+            "Skills: " + (data.skills || "Not found") + "\n" +
+            "Extracted Characters: " + data.extractedChars,
+            false,
+            true
+        );
+
+    } catch (error) {
+
+        showResult(resultBox, error.message, true);
+
+    }
+}
+
+
+// =====================================
+// SKILLS ANALYSIS
+// =====================================
+
+async function analyzeSkills() {
+
+    const yourSkills =
+        document.getElementById("yourSkills").value;
+
+    const jobSkills =
+        document.getElementById("jobSkills").value;
+
+    const resultBox =
+        document.getElementById("analysisResult");
+
+    if (!yourSkills.trim() || !jobSkills.trim()) {
+
+        showResult(
+            resultBox,
+            "Please enter both your skills and required job skills.",
+            true
+        );
+
+        return;
+    }
+
+    const params = new URLSearchParams();
+
+    params.append("yourSkills", yourSkills);
+
+    params.append("jobSkills", jobSkills);
+
+    try {
+
+        const response = await fetch("/analyze", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: params.toString()
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || "Analysis failed.");
+        }
+
+        document.getElementById("percentage").innerText =
+            data.percentage.toFixed(2) + "%";
+
+        document.getElementById("progressBar").style.width =
+            data.percentage + "%";
+
+        document.getElementById("matchedSkills").innerText =
+            data.matched || "None";
+
+        document.getElementById("missingSkills").innerText =
+            data.missing || "None";
+
+        document.getElementById("matchedCount").innerText =
+            data.matchedCount;
+
+        document.getElementById("totalCount").innerText =
+            data.totalCount;
+
+        resultBox.style.display = "block";
+        resultBox.className = "result success";
+
+    } catch (error) {
+
+        showResult(resultBox, error.message, true);
+
+    }
+
+}
+
+
+// =====================================
+// CAREER ASSISTANT CHAT
+// =====================================
+
+async function sendMessage() {
+
+    const input = document.getElementById("chatInput");
+
+    const question = input.value.trim();
+
+    const chatBox = document.getElementById("chatBox");
+
+    if (!question) {
+        return;
+    }
+
+    // Display user message
+
+    addMessage(question, "user-message");
+
+    input.value = "";
+
+    try {
+
+        const params = new URLSearchParams();
+
+        params.append(
+            "question",
+            question
+        );
+
+        params.append(
+            "name",
+            document.getElementById("studentName").value
+        );
+
+        params.append(
+            "role",
+            document.getElementById("jobRole").value
+        );
+
+        params.append(
+            "skills",
+            document.getElementById("yourSkills").value
+        );
+
+        params.append(
+            "missing",
+            document.getElementById("missingSkills").innerText
+        );
+
+
+        const response = await fetch("/chat", {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+
+            body: params.toString()
+
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.reply || "Chat request failed.");
+        }
+
+        addMessage(
+            data.reply || "No response received.",
+            "bot-message"
+        );
+
+    } catch (error) {
+
+        addMessage(
+            "Error: " + error.message,
+            "bot-message"
+        );
+
+    }
+
+}
+
+
+// =====================================
+// DISPLAY CHAT MESSAGES
+// =====================================
+
+function addMessage(message, className) {
+
+    const chatBox = document.getElementById("chatBox");
+
+    const div = document.createElement("div");
+
+    div.className = "message " + className;
+
+    div.textContent = message;
+
+    chatBox.appendChild(div);
+
+    chatBox.scrollTop = chatBox.scrollHeight;
+
+}
+
+
+// =====================================
+// DISPLAY RESULT MESSAGES
+// =====================================
+
+function showResult(box, message, isError, isSuccess = false) {
+
+    box.style.display = "block";
+
+    box.className = isError
+        ? "result error"
+        : isSuccess
+            ? "result success"
+            : "result";
+
+    box.textContent = message;
+
+}
+
+</script>
+
+</body>
+</html>
